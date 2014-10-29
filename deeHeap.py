@@ -58,19 +58,30 @@ class DeeHeap:
 
     '''
         retourne le parent du noeud passé en index
+        formule
     '''
     def parent(self, index):
-        if index <= self.d:
+        if index <= 0 or index-self.d <= 0:
             return 0
         else:
-            return float("inf")
+            x = index % self.d
+
 
     '''
         retourne la valeur du tas et
         conserve la propriété de tas max (extraire-max-tas())
     '''
     def extract_heap_max(self):
-        return None
+        if self.length < 0:
+            return None
+        else:
+            max_val = self.heap[0]
+            self.heap[0] = self.heap[self.length - 1]  # on met une valeur basse en haut du tas
+            self.length -= 1  # on diminue taille de 1
+            self.heap.pop(self.length - 1)  # et on pop le dernier élément qu'on a mis en haut du tas
+            self.heap_max(0)
+
+            return max_val
 
     '''
         insere nouvel élément dans le tas (inserer-tas-max())
@@ -84,10 +95,48 @@ class DeeHeap:
     def increase_heap_key(self):
         return None
 
-zeHeap = DeeHeap([4, 1, 3, 2, 16, 9, 10, 14, 8, 7], 4)
+    '''
+        afficher le tableau directement
+        en faisant des print() sur objet tas
+    '''
+    def __str__(self):
+        ret_str = "longueur du tas : " + str(self.length)
+        ret_str += "\ntas-d : " + str(self.d)
+        ret_str += "\n["
+        for i in range(0, self.length, 1):
+            ret_str += str(self.heap[i]) + ", "
 
-print(zeHeap.heap)
+        ret_str = ret_str.rstrip(', ') + "]\n"
+        return ret_str
 
+    '''
+        impression etat
+    '''
+    def afficher(self):
+        print(self)
+
+# tas brut - non construit
+zeHeap = DeeHeap([4, 1, 3, 2, 16, 9, 10, 14, 8, 7], 3)
+print("tas non construit :")
+zeHeap.afficher()
+
+# construction du tas
 zeHeap.build_heap()
+print("tas construit :")
+zeHeap.afficher()
 
-print(zeHeap.heap)
+# extraction tas max
+print("extraction max :")
+maxVal = zeHeap.extract_heap_max()
+print(maxVal)
+zeHeap.afficher()
+
+# insere nouvel élément
+print("parent de 1 : " + str(zeHeap.parent(1)))
+print("parent de 2 : " + str(zeHeap.parent(2)))
+print("parent de 3 : " + str(zeHeap.parent(3)))
+print("parent de 4 : " + str(zeHeap.parent(4)))
+print("parent de 5 : " + str(zeHeap.parent(5)))
+print("parent de 6 : " + str(zeHeap.parent(6)))
+print("parent de 7 : " + str(zeHeap.parent(7)))
+print("parent de 8 : " + str(zeHeap.parent(8)))
