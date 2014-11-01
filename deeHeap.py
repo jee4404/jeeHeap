@@ -1,4 +1,4 @@
-__author__ = 'Remy'
+__author__ = 'Remy Mourard'
 
 
 class DeeHeap:
@@ -57,7 +57,7 @@ class DeeHeap:
 
     '''
         retourne le parent du noeud passé en index
-        formule
+        on considère que le parent du sommet est le sommet lui même
     '''
     def parent(self, index):
         if index <= self.d:
@@ -90,12 +90,12 @@ class DeeHeap:
         augmente valeur d'un noeud (augmenter-clé-tas)
     '''
     def increase_heap_key(self, index, new_val):
-        if self.heap[index] > new_val or index > self.length-1:
+        if self.heap[index] > new_val or index > self.length-1:  #
             return None
         else:
             self.heap[index] = new_val
-            while index >= 1 and self.heap[self.parent(index)] < self.heap[index]:
-                self.heap[index], self.heap[self.parent(index)] = self.heap[self.parent(index)], self.heap[index]
+            while index >= 1 and self.heap[self.parent(index)] < self.heap[index]:  # tant que le parent a une valeur inférieure
+                self.heap[index], self.heap[self.parent(index)] = self.heap[self.parent(index)], self.heap[index]  # , on permutte
                 index = self.parent(index)
 
     '''
