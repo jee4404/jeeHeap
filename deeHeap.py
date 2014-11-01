@@ -18,7 +18,6 @@ class DeeHeap:
     '''
     def build_heap(self):
         start_index = (self.length - 1) // self.d
-        print("start index ", start_index)
         for index in range(start_index, -1, -1):  # attention range() exclue toujours la derniere valeur conditionnelle
             self.heap_max(index)
 
@@ -61,11 +60,15 @@ class DeeHeap:
         formule
     '''
     def parent(self, index):
-        if index <= 0 or index-self.d <= 0:
-            return 0
+        if index <= self.d:
+            parent = 0
         else:
-            x = index % self.d
+            if index % self.d != 0:
+                parent = index // self.d
+            else:
+                parent = (index // self.d) - 1
 
+        return parent
 
     '''
         retourne la valeur du tas et
@@ -77,23 +80,31 @@ class DeeHeap:
         else:
             max_val = self.heap[0]
             self.heap[0] = self.heap[self.length - 1]  # on met une valeur basse en haut du tas
+            self.heap.pop(self.length - 1)  # on pop le dernier élément qu'on a mis en haut du tas
             self.length -= 1  # on diminue taille de 1
-            self.heap.pop(self.length - 1)  # et on pop le dernier élément qu'on a mis en haut du tas
             self.heap_max(0)
 
             return max_val
 
     '''
-        insere nouvel élément dans le tas (inserer-tas-max())
-    '''
-    def insert_heap_max(self):
-        return None
-
-    '''
         augmente valeur d'un noeud (augmenter-clé-tas)
     '''
-    def increase_heap_key(self):
-        return None
+    def increase_heap_key(self, index, new_val):
+        if self.heap[index] > new_val or index > self.length-1:
+            return None
+        else:
+            self.heap[index] = new_val
+            while index >= 1 and self.heap[self.parent(index)] < self.heap[index]:
+                self.heap[index], self.heap[self.parent(index)] = self.heap[self.parent(index)], self.heap[index]
+                index = self.parent(index)
+
+    '''
+        insere nouvel élément dans le tas (inserer-tas-max())
+    '''
+    def insert_heap_max(self, value):
+        self.length += 1
+        self.heap.append(float("-inf"))
+        self.increase_heap_key(self.length-1, value)
 
     '''
         afficher le tableau directement
@@ -107,6 +118,10 @@ class DeeHeap:
             ret_str += str(self.heap[i]) + ", "
 
         ret_str = ret_str.rstrip(', ') + "]\n"
+
+        for i in range(0, zeHeap.length):
+            ret_str += "index parent de " + str(self.heap[i]) + " : " + str(self.parent(i)) + "\n"
+
         return ret_str
 
     '''
@@ -116,7 +131,7 @@ class DeeHeap:
         print(self)
 
 # tas brut - non construit
-zeHeap = DeeHeap([4, 1, 3, 2, 16, 9, 10, 14, 8, 7], 3)
+zeHeap = DeeHeap([4, 1, 3, 2, 16, 9, 10, 5, 13, 14, 8, 15, 17], 3)
 print("tas non construit :")
 zeHeap.afficher()
 
@@ -131,12 +146,17 @@ maxVal = zeHeap.extract_heap_max()
 print(maxVal)
 zeHeap.afficher()
 
-# insere nouvel élément
-print("parent de 1 : " + str(zeHeap.parent(1)))
-print("parent de 2 : " + str(zeHeap.parent(2)))
-print("parent de 3 : " + str(zeHeap.parent(3)))
-print("parent de 4 : " + str(zeHeap.parent(4)))
-print("parent de 5 : " + str(zeHeap.parent(5)))
-print("parent de 6 : " + str(zeHeap.parent(6)))
-print("parent de 7 : " + str(zeHeap.parent(7)))
-print("parent de 8 : " + str(zeHeap.parent(8)))
+# augmente clé élément existant
+print("augmentation clé :")
+print("heap[4] = 1 --> 11")
+zeHeap.increase_heap_key(4, 11)
+zeHeap.afficher()
+
+# insère nouvel élément dans le tas
+print("insertion nouvel élément dans le tas de valeur 7")
+zeHeap.insert_heap_max(7)
+zeHeap.afficher()
+
+print("insertion nouvel élément dans le tas de valeur 16")
+zeHeap.insert_heap_max(16)
+zeHeap.afficher()
